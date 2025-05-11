@@ -33,6 +33,9 @@ public class User extends AbstractEntity implements IdentifiableEntity {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false)
+    private String password;
+
     @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 

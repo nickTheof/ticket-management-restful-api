@@ -42,9 +42,17 @@ public class Ticket extends AbstractEntity implements IdentifiableEntity{
     @JoinColumn(name = "company_id")
     private Company company;
 
+    @Getter(AccessLevel.PROTECTED)
+    @OneToMany(mappedBy = "ticket", fetch = FetchType.LAZY)
+    private Set<FileAttachment> attachments = new HashSet<>();
+
 
     public Set<User> getAssignedUsers() {
         return Collections.unmodifiableSet(assignedToUsers);
+    }
+
+    public Set<FileAttachment> getTicketAttachments() {
+        return Collections.unmodifiableSet(attachments);
     }
 
     public void addTicketCreator(User user) {
@@ -82,5 +90,17 @@ public class Ticket extends AbstractEntity implements IdentifiableEntity{
         if (user == null) return;
         assignedToUsers.remove(user);
         user.getAssignedTickets().remove(this);
+    }
+
+    public void addAttachment(FileAttachment attachment) {
+        if (attachment == null) return;
+        attachments.add(attachment);
+        attachment.setTicket(this);
+    }
+
+    public void removeAttachment(FileAttachment attachment) {
+        if (attachment == null) return;
+        attachments.remove(attachment);
+        attachment.setTicket(null);
     }
 }

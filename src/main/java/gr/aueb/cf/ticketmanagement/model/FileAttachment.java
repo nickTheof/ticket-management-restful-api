@@ -1,17 +1,16 @@
 package gr.aueb.cf.ticketmanagement.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-
+@Entity
+@Table(name = "file_attachments")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CommentFile extends AbstractEntity implements IdentifiableEntity {
+@Builder
+public class FileAttachment extends AbstractEntity implements IdentifiableEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,6 +23,10 @@ public class CommentFile extends AbstractEntity implements IdentifiableEntity {
 
     @Column(nullable = false)
     private String filePath;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
@@ -39,5 +42,17 @@ public class CommentFile extends AbstractEntity implements IdentifiableEntity {
         if (comment == null) return;
         this.setComment(null);
         comment.getAttachments().remove(this);
+    }
+
+    public void addTicket(Ticket ticket) {
+        if (ticket == null) return;
+        this.setTicket(ticket);
+        ticket.getAttachments().add(this);
+    }
+
+    public void removeTicket(Ticket ticket) {
+        if (ticket == null) return;
+        this.setTicket(null);
+        ticket.getAttachments().remove(this);
     }
 }

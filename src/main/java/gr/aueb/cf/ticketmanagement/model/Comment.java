@@ -31,20 +31,20 @@ public class Comment extends AbstractEntity implements IdentifiableEntity{
 
     @Getter(AccessLevel.PROTECTED)
     @OneToMany(mappedBy = "comment", fetch = FetchType.LAZY)
-    private Set<CommentFile> attachments = new HashSet<>();
+    private Set<FileAttachment> attachments = new HashSet<>();
 
-    public Set<CommentFile> getAttachFiles() {
+    public Set<FileAttachment> getAttachFiles() {
         return Collections.unmodifiableSet(attachments);
     }
 
 
-    public void addAttachment(CommentFile file) {
+    public void addAttachment(FileAttachment file) {
         if (file == null) return;
         attachments.add(file);
         file.setComment(this);
     }
 
-    public void removeAttachment(CommentFile file) {
+    public void removeAttachment(FileAttachment file) {
         if (file == null) return;
         attachments.remove(file);
         file.setComment(null);
